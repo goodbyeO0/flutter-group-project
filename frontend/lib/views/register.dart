@@ -70,7 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: AppColors.lightGrey,
       appBar: AppBar(
-        title: Text('Register New Patient'),
+        title: Text('Register'),
         backgroundColor: AppColors.lightGrey,
       ),
       body: Form(

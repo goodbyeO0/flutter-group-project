@@ -322,14 +322,32 @@ app.get("/api/updateLocation", (req, res) => {
 // Add this with your other environment variables
 const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
 
-app.get("/api/getNearbyHospitals", async (req, res) => {
-  const { latitude, longitude, radius } = req.query;
+// Verify the API key is loaded
+console.log(
+  "API Key loaded:",
+  process.env.GOOGLE_PLACES_API_KEY ? "Yes" : "No"
+);
 
+app.get("/api/getNearbyHospitals", async (req, res) => {
   try {
-    // Call Google Places API to get nearby hospitals
-    const response = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&type=hospital&key=${GOOGLE_PLACES_API_KEY}`
-    );
+    const { latitude, longitude, radius } = req.query;
+
+    if (!process.env.GOOGLE_PLACES_API_KEY) {
+      throw new Error("Google Places API key is not configured");
+    }
+
+    console.log("Fetching nearby hospitals from Google Places API");
+    console.log("Parameters:", { latitude, longitude, radius });
+
+    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&type=hospital&key=${process.env.GOOGLE_PLACES_API_KEY}`;
+    console.log("Request URL:", url);
+
+    const response = await axios.get(url);
+    console.log("Google Places API response status:", response.status);
+
+    if (!response.data.results) {
+      throw new Error("Invalid response from Google Places API");
+    }
 
     const hospitals = response.data.results.map((place) => ({
       LocationID: place.place_id,
@@ -338,23 +356,25 @@ app.get("/api/getNearbyHospitals", async (req, res) => {
       HospitalLong: place.geometry.location.lng,
       HospitalAddress: place.vicinity,
       Distance: calculateDistance(
-        latitude,
-        longitude,
+        parseFloat(latitude),
+        parseFloat(longitude),
         place.geometry.location.lat,
         place.geometry.location.lng
       ),
     }));
 
-    // Sort by distance and limit to 15 results
-    hospitals.sort((a, b) => a.Distance - b.Distance);
-    const nearestHospitals = hospitals.slice(0, 15);
+    // Filter hospitals within 15km and sort by distance
+    const nearbyHospitals = hospitals
+      .filter((hospital) => hospital.Distance <= 15)
+      .sort((a, b) => a.Distance - b.Distance);
 
-    res.json(nearestHospitals);
+    console.log(`Found ${nearbyHospitals.length} hospitals within 15km`);
+    res.json(nearbyHospitals);
   } catch (error) {
     console.error("Error fetching nearby hospitals:", error);
     res.status(500).json({
       status: 500,
-      error: "Failed to fetch nearby hospitals",
+      error: `Failed to fetch nearby hospitals: ${error.message}`,
     });
   }
 });
@@ -505,6 +525,43 @@ app.get("/api/getUserTracking", (req, res) => {
       res.json(formattedResults);
     }
   });
+});
+
+app.get("/api/updateUser", (req, res) => {
+  const { UserID, UserName, UserEmail } = req.query;
+
+  console.log("Updating user profile:", { UserID, UserName, UserEmail });
+
+  db.query(
+    "UPDATE users SET UserName = ?, UserEmail = ? WHERE UserID = ?",
+    [UserName, UserEmail, UserID],
+    (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({
+          status: 500,
+          error: `Database error: ${err.message}`,
+        });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          status: 404,
+          error: "User not found",
+        });
+      }
+
+      res.json({
+        status: 200,
+        message: "Profile updated successfully",
+        data: {
+          UserID,
+          UserName,
+          UserEmail,
+        },
+      });
+    }
+  );
 });
 
 app.listen(port, "0.0.0.0", () => {

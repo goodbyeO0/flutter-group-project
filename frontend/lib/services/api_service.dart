@@ -228,21 +228,33 @@ class ApiService {
   Future<List<Map<String, dynamic>>> getNearbyHospitals(
       double lat, double lng) async {
     try {
-      print('Fetching nearby hospitals...');
+      print('Fetching nearby hospitals for lat: $lat, lng: $lng');
       final response = await http.get(
         Uri.parse('$baseUrl/api/getNearbyHospitals').replace(
           queryParameters: {
             'latitude': lat.toString(),
             'longitude': lng.toString(),
-            'radius': '5000', // 5km radius
+            'radius': '15000', // Changed to 15km (15000 meters)
           },
         ),
       );
 
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      print('Request URL: ${response.request?.url}');
+
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        return data.cast<Map<String, dynamic>>();
+        if (data.isEmpty) {
+          print('No hospitals found in the database');
+        }
+        // Filter hospitals within 15km
+        return data
+            .map((hospital) => hospital as Map<String, dynamic>)
+            .where((hospital) => (hospital['Distance'] as num) <= 15.0)
+            .toList();
       } else {
+        print('Error response: ${response.body}');
         throw Exception('Failed to load nearby hospitals');
       }
     } catch (e) {
@@ -292,6 +304,40 @@ class ApiService {
       }
     } catch (e) {
       print('Error tracking location: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateUserProfile({
+    required int userId,
+    required String name,
+    required String email,
+  }) async {
+    try {
+      print('Updating user profile...');
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/updateUser').replace(
+          queryParameters: {
+            'UserID': userId.toString(),
+            'UserName': name,
+            'UserEmail': email,
+          },
+        ),
+      );
+
+      print('Update profile response status: ${response.statusCode}');
+      print('Update profile response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to update profile');
+      }
+    } catch (e) {
+      print('Error updating profile: $e');
+      return {
+        'status': 500,
+        'error': 'Failed to update profile: $e',
+      };
     }
   }
 }

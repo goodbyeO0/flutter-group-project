@@ -1,6 +1,6 @@
-# Hospital Tracker Mobile App
+# Hospitalzzz Mobile App
 
-A Flutter-based mobile application for tracking nearby hospitals and user locations. This app is part of the Hospital Tracker project, providing the mobile frontend interface.
+A Flutter-based mobile application for tracking nearby hospitals and user locations. This app is part of the Hospitalzzz project, providing the mobile frontend interface.
 
 ## Features
 

@@ -1,6 +1,6 @@
-# Hospital Tracker Backend
+# Hospitalzzz Backend
 
-Express.js server implementation for the Hospital Tracker Application. This backend service provides APIs for user authentication, hospital location management, and user location tracking.
+Express.js server implementation for the Hospitalzzz Application. This backend service provides APIs for user authentication, hospital location management, and user location tracking.
 
 ## Features
 

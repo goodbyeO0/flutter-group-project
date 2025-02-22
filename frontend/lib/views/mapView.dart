@@ -22,7 +22,8 @@ class MapView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Nearby Hospitals'),
-        backgroundColor: AppColors.lightGrey,
+        backgroundColor: AppColors.darkNavy,
+        foregroundColor: AppColors.lightGrey,
       ),
       body: Column(
         children: [
@@ -43,73 +44,67 @@ class MapView extends StatelessWidget {
                       point: LatLng(userLatitude, userLongitude),
                       builder: (ctx) => Container(
                         child: Icon(
-                          Icons.location_pin,
+                          Icons.person_pin_circle,
                           color: AppColors.turquoise,
                           size: 40,
                         ),
                       ),
                     ),
                     // Hospital markers
-                    ...nearbyHospitals
-                        .map((hospital) => Marker(
-                              point: LatLng(
-                                hospital["HospitalLang"]?.toDouble() ?? 0.0,
-                                hospital["HospitalLong"]?.toDouble() ?? 0.0,
-                              ),
-                              builder: (ctx) => GestureDetector(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => Container(
-                                      padding: EdgeInsets.all(16),
-                                      color: AppColors.darkNavy,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            hospital["HospitalName"] ?? '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge
-                                                ?.copyWith(
-                                                  color: AppColors.lightGrey,
-                                                ),
-                                          ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            hospital["HospitalAddress"] ?? '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                  color: AppColors.lightGrey,
-                                                ),
-                                          ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            'Distance: ${hospital["Distance"].toStringAsFixed(2)} km',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.copyWith(
-                                                  color: AppColors.lightGrey,
-                                                ),
-                                          ),
-                                        ],
+                    ...nearbyHospitals.map(
+                      (hospital) => Marker(
+                        point: LatLng(
+                          hospital["HospitalLang"]?.toDouble() ?? 0.0,
+                          hospital["HospitalLong"]?.toDouble() ?? 0.0,
+                        ),
+                        builder: (ctx) => GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => Container(
+                                padding: EdgeInsets.all(16),
+                                color: AppColors.darkNavy,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      hospital["HospitalName"] ??
+                                          'Unknown Hospital',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.lightGrey,
                                       ),
                                     ),
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.local_hospital,
-                                  color: AppColors.darkNavy,
-                                  size: 40,
+                                    SizedBox(height: 8),
+                                    Text(
+                                      hospital["HospitalAddress"] ??
+                                          'No address available',
+                                      style: TextStyle(
+                                        color: AppColors.lightGrey,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Distance: ${hospital["Distance"].toStringAsFixed(2)} km',
+                                      style: TextStyle(
+                                        color: AppColors.turquoise,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ))
-                        .toList(),
+                            );
+                          },
+                          child: Icon(
+                            Icons.local_hospital,
+                            color: AppColors.darkNavy,
+                            size: 40,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -123,16 +118,25 @@ class MapView extends StatelessWidget {
               children: [
                 Text(
                   'Your Location',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: AppColors.lightGrey,
-                      ),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.lightGrey,
+                  ),
                 ),
                 SizedBox(height: 8),
                 Text(
                   userAddress,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.lightGrey,
-                      ),
+                  style: TextStyle(
+                    color: AppColors.lightGrey,
+                  ),
+                ),
+                Text(
+                  'Found ${nearbyHospitals.length} hospitals within 15km',
+                  style: TextStyle(
+                    color: AppColors.turquoise,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),

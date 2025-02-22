@@ -33,19 +33,19 @@ class TermsAndService extends StatelessWidget {
                   children: [
                     TextSpan(
                       text:
-                          "Welcome to Hospital Tracker! This mobile application is designed to assist users in locating hospitals, tracking visits, and accessing health-related information. By downloading and using our app, you agree to adhere to the following terms and conditions. This document serves as a guide to ensure that both you, the user, and we, the providers, maintain a clear understanding of rights, responsibilities, and limitations while using Hospital Tracker.\n\n",
+                          "Welcome to Hospitalzzz! This mobile application is designed to assist users in locating hospitals, tracking visits, and accessing health-related information. By downloading and using our app, you agree to adhere to the following terms and conditions. This document serves as a guide to ensure that both you, the user, and we, the providers, maintain a clear understanding of rights, responsibilities, and limitations while using Hospitalzzz.\n\n",
                     ),
                     TextSpan(
                       text:
-                          "First and foremost, user eligibility is a key requirement. By using this application, you confirm that you are at least 18 years old and capable of entering legally binding agreements. Hospital Tracker is intended for responsible usage, and we encourage parents or guardians to supervise minors who may need to access health-related information. Furthermore, users are expected to utilize the application only for its intended purposes, such as finding hospitals, tracking medical appointments, and accessing health-related resources. \n\n",
+                          "First and foremost, user eligibility is a key requirement. By using this application, you confirm that you are at least 18 years old and capable of entering legally binding agreements. Hospitalzzz is intended for responsible usage, and we encourage parents or guardians to supervise minors who may need to access health-related information. Furthermore, users are expected to utilize the application only for its intended purposes, such as finding hospitals, tracking medical appointments, and accessing health-related resources. \n\n",
                     ),
                     TextSpan(
                       text:
-                          "The intellectual property of Hospital Tracker is one of our core values. All text, graphics, logos, designs, and functionalities within the application are the sole property of Future Technologies Corporation or our licensors. As such, copying, reproducing, or distributing the content without permission is strictly prohibited. Users are granted a non-exclusive, non-transferable license to use the app for personal purposes only. Unauthorized attempts to hack, reverse engineer, or misuse the app will result in termination of access and potential legal action. Your hard work, innovative ideas, and ability to overcome obstacles together have been invaluable. This experience has strengthened not only our project but also our bond as a team, and it has been an honor to work alongside such talented individuals.\n\n",
+                          "The intellectual property of Hospitalzzz is one of our core values. All text, graphics, logos, designs, and functionalities within the application are the sole property of Future Technologies Corporation or our licensors. As such, copying, reproducing, or distributing the content without permission is strictly prohibited. Users are granted a non-exclusive, non-transferable license to use the app for personal purposes only. Unauthorized attempts to hack, reverse engineer, or misuse the app will result in termination of access and potential legal action. Your hard work, innovative ideas, and ability to overcome obstacles together have been invaluable. This experience has strengthened not only our project but also our bond as a team, and it has been an honor to work alongside such talented individuals.\n\n",
                     ),
                     TextSpan(
                       text:
-                          "When using Hospital Tracker, you agree to comply with all applicable laws and regulations. It is strictly forbidden to use the application for fraudulent or illegal activities. While we strive to provide accurate and up-to-date information, it is important to note that the app's content should be used as a reference and not as a substitute for professional medical advice. Always consult qualified healthcare professionals for medical issues, as Hospital Tracker does not assume liability for decisions made based on its information.\n\n",
+                          "When using Hospitalzzz, you agree to comply with all applicable laws and regulations. It is strictly forbidden to use the application for fraudulent or illegal activities. While we strive to provide accurate and up-to-date information, it is important to note that the app's content should be used as a reference and not as a substitute for professional medical advice. Always consult qualified healthcare professionals for medical issues, as Hospitalzzz does not assume liability for decisions made based on its information.\n\n",
                     ),
                     TextSpan(
                       text:
@@ -53,7 +53,7 @@ class TermsAndService extends StatelessWidget {
                     ),
                     TextSpan(
                       text:
-                          "By agreeing to these terms, you join us in ensuring that Hospital Tracker remains a safe, efficient, and helpful tool for its users. Should you have questions, concerns, or feedback regarding these terms, feel free to contact us at futuretechnologies@proton.com.my. Thank you for choosing Hospital Tracker, and we wish you a seamless experience as you navigate your healthcare journey!",
+                          "By agreeing to these terms, you join us in ensuring that Hospitalzzz remains a safe, efficient, and helpful tool for its users. Should you have questions, concerns, or feedback regarding these terms, feel free to contact us at futuretechnologies@proton.com.my. Thank you for choosing Hospitalzzz, and we wish you a seamless experience as you navigate your healthcare journey!",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_frontend/services/api_service.dart';
-import 'package:mobile_frontend/widget/fieldbox.dart';
 import 'package:mobile_frontend/utils/app_colors.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -21,8 +20,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic> _userData = {};
   final _apiService = ApiService();
   final _formKey = GlobalKey<FormState>();
-
-  // Controllers for editing
   late TextEditingController _nameController;
   late TextEditingController _emailController;
 
@@ -43,35 +40,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _loadUserData() async {
     try {
-      final userId = widget.userData['UserID'];
-      print('Loading user data for ID: $userId'); // Debug print
-
-      if (userId == null) {
-        throw Exception('UserID is null');
-      }
-
-      final response =
-          await _apiService.getUserData(int.parse(userId.toString()));
-      print('Response from getUserData: $response'); // Debug print
-
-      if (response['status'] == 200) {
-        setState(() {
-          _userData = response['data'];
-          _nameController.text = _userData['UserName'] ?? '';
-          _emailController.text = _userData['UserEmail'] ?? '';
-          _isLoading = false;
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(response['error'] ?? 'Failed to load user data')),
-        );
-      }
+      setState(() {
+        _userData = widget.userData;
+        _nameController.text = _userData['UserName'] ?? '';
+        _emailController.text = _userData['UserEmail'] ?? '';
+        _isLoading = false;
+      });
     } catch (e) {
-      print('Error in _loadUserData: $e'); // Debug print
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      print('Error loading user data: $e');
+      setState(() => _isLoading = false);
     }
   }
 
@@ -79,28 +56,23 @@ class _ProfilePageState extends State<ProfilePage> {
     if (!_formKey.currentState!.validate()) return;
 
     try {
-      final response = await _apiService.editUser(
-        userId: int.parse(_userData['UserID'].toString()),
+      setState(() => _isLoading = true);
+      final response = await _apiService.updateUserProfile(
+        userId: widget.userData['UserID'],
         name: _nameController.text,
         email: _emailController.text,
       );
 
       if (response['status'] == 200) {
         setState(() {
+          _isEditing = false;
           _userData['UserName'] = _nameController.text;
           _userData['UserEmail'] = _emailController.text;
-          _isEditing = false;
         });
-
-        // Pass updated data back to previous screen
         Navigator.pop(context, {
           'UserName': _nameController.text,
           'UserEmail': _emailController.text,
         });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile updated successfully')),
-        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -109,94 +81,11 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text('Error updating profile: $e')),
       );
+    } finally {
+      setState(() => _isLoading = false);
     }
-  }
-
-  Widget _buildProfileDetails() {
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppColors.charcoal.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.person,
-                    size: 100,
-                    color: AppColors.darkNavy,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    _userData['UserName'] ?? '',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.darkNavy,
-                    ),
-                  ),
-                  Text(
-                    _userData['UserEmail'] ?? '',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.charcoal,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (_isEditing) ...[
-              // Edit Mode
-              FieldBox(
-                label: 'Name',
-                controller: _nameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              FieldBox(
-                label: 'Email',
-                controller: _emailController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!value.contains('@')) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.emailAddress,
-              ),
-            ] else ...[
-              // View Mode
-              ProfileDetailRow(
-                icon: Icons.person,
-                title: 'Name',
-                value: _userData['UserName'] ?? '',
-              ),
-              ProfileDetailRow(
-                icon: Icons.email,
-                title: 'Email',
-                value: _userData['UserEmail'] ?? '',
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -204,123 +93,98 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: AppColors.lightGrey,
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text(
+          'Profile',
+          style: TextStyle(color: AppColors.lightGrey),
+        ),
         backgroundColor: AppColors.darkNavy,
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppColors.charcoal.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.person,
-                    size: 100,
-                    color: AppColors.darkNavy,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    _userData['UserName'] ?? '',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.darkNavy,
-                    ),
-                  ),
-                  Text(
-                    _userData['UserEmail'] ?? '',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.charcoal,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Details Section
-            _buildProfileDetails(),
-            // Edit/Save Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.turquoise,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: () {
-                  if (_isEditing) {
-                    _saveChanges();
-                  } else {
-                    setState(() => _isEditing = true);
-                  }
-                },
-                child: Center(
-                  child: Text(
-                    _isEditing ? 'Save Changes' : 'Edit Profile',
-                    style: TextStyle(fontSize: 18, color: AppColors.lightGrey),
-                  ),
-                ),
-              ),
-            ),
-          ],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppColors.lightGrey),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
-    );
-  }
-}
-
-// Widget for each profile detail row
-class ProfileDetailRow extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String value;
-
-  const ProfileDetailRow({
-    required this.icon,
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: [
-          Icon(icon, size: 24, color: AppColors.turquoise),
-          SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.charcoal,
-                  ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: AppColors.turquoise,
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                        color: AppColors.lightGrey,
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    Card(
+                      elevation: 4,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: _nameController,
+                              enabled: _isEditing,
+                              decoration: InputDecoration(
+                                labelText: 'Name',
+                                prefixIcon: Icon(Icons.person_outline),
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) => value?.isEmpty == true
+                                  ? 'Name is required'
+                                  : null,
+                            ),
+                            SizedBox(height: 16),
+                            TextFormField(
+                              controller: _emailController,
+                              enabled: _isEditing,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                prefixIcon: Icon(Icons.email_outlined),
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) => value?.isEmpty == true
+                                  ? 'Email is required'
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.turquoise,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 48, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_isEditing) {
+                          _saveChanges();
+                        } else {
+                          setState(() => _isEditing = true);
+                        }
+                      },
+                      child: Text(
+                        _isEditing ? 'Save Changes' : 'Edit Profile',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.lightGrey,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 }

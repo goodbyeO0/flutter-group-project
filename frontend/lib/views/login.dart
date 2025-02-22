@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                         color: AppColors.turquoise,
                       ),
                       Text(
-                        "Hospital Tracker",
+                        "Hospitalzzzz",
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,

@@ -1,4 +1,4 @@
-# Hospital Tracker Application
+# Hospitalzzz Application
 
 A mobile application that helps users find nearby hospitals and track their locations. The application implements user login and displays the user's current location along with nearby hospitals on a map.
 

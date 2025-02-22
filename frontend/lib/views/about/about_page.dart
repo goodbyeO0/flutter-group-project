@@ -10,9 +10,18 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.lightGrey,
       appBar: AppBar(
-        title: Text(
-          "About",
-          style: TextStyle(color: AppColors.lightGrey),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              height: 40,
+            ),
+            SizedBox(width: 8),
+            Text(
+              "About",
+              style: TextStyle(color: AppColors.lightGrey),
+            ),
+          ],
         ),
         backgroundColor: AppColors.darkNavy,
         elevation: 0,
@@ -32,75 +41,82 @@ class AboutPage extends StatelessWidget {
             children: [
               Text(
                 'Team Members',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.darkNavy,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16),
               _buildMemberCard(
                 'Muhammad Hazrul Fahmi Bin Marhalim',
                 'Project Manager',
                 'hazrulsehebat@gmail.com',
+                '2022663458',
                 'assets/images/hazrul.png',
               ),
               _buildMemberCard(
                 'Muhammad Mirza Bin Azhar',
                 'Project Designer',
                 'whodatijay@gmail.com',
+                '2022453238',
                 'assets/images/mirza.png',
               ),
               _buildMemberCard(
                 'Muhammad Izzuddin Bin Othman',
                 'Lead Development',
                 'izzuddin6595@gmail.com',
+                '2022461314',
                 'assets/images/izzuddin.png',
               ),
               _buildMemberCard(
                 'Muhammad Izhan Zikry Bin Hamdani',
                 'UI/UX Designer',
                 'izhanzikry@gmail.com',
+                '2022455842',
                 'assets/images/izhan.png',
               ),
               _buildMemberCard(
                 'Tengku Aizad Bin Tengku Norazman',
                 'Backend Developer',
                 'aizaddtengkuazman@gmail.com',
+                '2022612546',
                 'assets/images/aizad.png',
               ),
               _buildMemberCard(
                 'Muhammad Saufi Bin Muhammad Safian',
                 'Backend Developer',
                 'saufi2706@gmail.com',
+                '2022835614',
                 'assets/images/saufi.png',
               ),
               SizedBox(height: 24),
               Text(
-                'Copyright Statement',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.darkNavy,
-                ),
+                'Information',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 12),
               Text(
-                '© 2025 Hospitalzzz. All rights reserved.',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.charcoal,
-                ),
+                'Hospitalzzz is a mobile application designed to help users locate and track nearby hospitals and healthcare facilities. With real-time location tracking and an intuitive interface, users can easily find medical assistance when needed.',
+                style: TextStyle(fontSize: 16, height: 1.5),
               ),
               SizedBox(height: 24),
+              Text(
+                'Copyright Statement',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 12),
+              Text(
+                '© 2025 Hospitalzzz. All rights reserved.',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 24),
+              Text(
+                'Website',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 12),
               Row(
                 children: [
                   Text(
                     'Visit our ',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.charcoal,
-                    ),
+                    style: TextStyle(fontSize: 16),
                   ),
                   TextButton(
                     onPressed: () async {
@@ -111,7 +127,7 @@ class AboutPage extends StatelessWidget {
                       }
                     },
                     child: Text(
-                      'Website',
+                      'GitHub Repository',
                       style: TextStyle(
                         fontSize: 16,
                         color: AppColors.turquoise,
@@ -119,11 +135,8 @@ class AboutPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    ' now !!!',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.charcoal,
-                    ),
+                    ' for more information.',
+                    style: TextStyle(fontSize: 16),
                   ),
                 ],
               ),
@@ -135,11 +148,15 @@ class AboutPage extends StatelessWidget {
   }
 
   Widget _buildMemberCard(
-      String name, String role, String email, String imagePath) {
+    String name,
+    String role,
+    String email,
+    String studentId,
+    String imagePath,
+  ) {
     return Card(
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 8),
-      color: AppColors.lightGrey,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -147,7 +164,7 @@ class AboutPage extends StatelessWidget {
             CircleAvatar(
               radius: 40,
               backgroundImage: AssetImage(imagePath),
-              backgroundColor: AppColors.charcoal.withOpacity(0.1),
+              backgroundColor: Colors.grey[200],
             ),
             SizedBox(width: 16),
             Expanded(
@@ -159,7 +176,6 @@ class AboutPage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.darkNavy,
                     ),
                   ),
                   SizedBox(height: 4),
@@ -180,7 +196,7 @@ class AboutPage extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    _getStudentId(name),
+                    'Student ID: $studentId',
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.charcoal,
@@ -194,17 +210,5 @@ class AboutPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getStudentId(String name) {
-    final Map<String, String> studentIds = {
-      'Muhammad Hazrul Fahmi Bin Marhalim': '2022663458',
-      'Muhammad Mirza Bin Azhar': '2022453238',
-      'Muhammad Izzuddin Bin Othman': '2022461314',
-      'Muhammad Izhan Zikry Bin Hamdani': '2022455842',
-      'Tengku Aizad Bin Tengku Norazman': '2022612546',
-      'Muhammad Saufi Bin Muhammad Safian': '2022835614',
-    };
-    return '${studentIds[name] ?? ""}';
   }
 }

@@ -44,6 +44,9 @@ dependencies:
   dio: ^5.7.0
   shared_preferences: ^2.0.8
   device_info_plus: ^9.1.2
+  flutter_secure_storage: ^9.0.0
+  http: ^0.13.6
+  url_launcher: ^6.2.0
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +72,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/videos/
+    - assets/images/hazrul.png
+    - assets/images/mirza.png
+    - assets/images/izzuddin.png
+    - assets/images/izhan.png
+    - assets/images/aizad.png
+    - assets/images/saufi.png
     # Keep only necessary icons/images, remove building/background images
 
   # An image asset can refer to one or more resolution-specific "variants", see
